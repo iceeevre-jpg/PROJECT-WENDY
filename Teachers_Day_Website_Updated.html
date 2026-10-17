@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#5b1027">
+  <title>Happy Teacher's Day ♡</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --wine: #5b1027;
+      --wine-dark: #310916;
+      --rose: #a94f68;
+      --blush: #f3dce1;
+      --cream: #fff8f0;
+      --gold: #d8b778;
+      --ink: #3b1823;
+      --muted: #79515d;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Georgia, 'Times New Roman', serif;
+      background: var(--wine-dark);
+      color: var(--cream);
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+    .page {
+      min-height: 100vh;
+      background: radial-gradient(ellipse at top, #7b1d3b 0%, #4a1023 48%, #260710 100%);
+      padding: 30px 18px 48px;
+      overflow: hidden;
+      position: relative;
+      isolation: isolate;
+    }
+    .sparkles { position: fixed; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; }
+    .sparkle { position: absolute; bottom: -24px; color: #f0d6a0; opacity: 0; animation: drift-up var(--duration, 7s) linear forwards; text-shadow: 0 0 12px rgba(240,214,160,.65); }
+    .page::before, .page::after { content: '✧'; position: absolute; z-index: -1; color: rgba(243,220,225,.22); font-size: clamp(5rem, 15vw, 12rem); pointer-events: none; animation: float 8s ease-in-out infinite; }
+    .page::before { top: 8%; left: 3%; }
+    .page::after { content: '✦'; right: 4%; top: 48%; animation-delay: -4s; }
+    .hero { text-align: center; max-width: 850px; margin: 0 auto 28px; animation: fade-up .9s both; }
+    .eyebrow { text-transform: uppercase; letter-spacing: .28em; font: 11px Arial, sans-serif; color: var(--gold); }
+    h1 { font-size: clamp(2.3rem, 7vw, 4.7rem); line-height: 1.04; margin: 16px 0 12px; font-weight: 500; }
+    h1 em { color: #f2cbd5; font-weight: 400; }
+    .subtitle { color: #f0dce1; font-size: 1.08rem; line-height: 1.7; max-width: 580px; margin: 0 auto; }
+    .ornament { color: var(--gold); letter-spacing: .7em; margin-top: 18px; animation: shimmer 3.5s ease-in-out infinite; }
+    .gift-grid { max-width: 1050px; margin: 32px auto 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; perspective: 1000px; transition: opacity .35s ease, transform .35s ease; }
+    .gift-grid[hidden] { display: none; }
+    .gift-grid.leaving { opacity: 0; transform: translateY(-10px) scale(.985); pointer-events: none; }
+    .gift {
+      min-height: 270px; padding: 26px 22px; border: 1px solid rgba(216,183,120,.58);
+      background: linear-gradient(155deg, rgba(255,248,240,.98), rgba(243,220,225,.96));
+      color: var(--ink); text-align: center; border-radius: 5px; position: relative;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      box-shadow: 0 16px 45px rgba(0,0,0,.18); transition: transform .45s cubic-bezier(.2,.75,.25,1), box-shadow .45s ease; animation: fade-up .8s both;
+    }
+    .gift:nth-child(2) { animation-delay: .14s; }
+    .gift:nth-child(3) { animation-delay: .28s; }
+    .gift:hover { transform: translateY(-8px) rotateX(2deg); box-shadow: 0 25px 55px rgba(0,0,0,.3); }
+    .gift::before { content: ''; position: absolute; inset: 7px; border: 1px solid rgba(169,79,104,.26); pointer-events: none; }
+    .symbol { font-size: 2.4rem; margin-bottom: 12px; animation: float 4s ease-in-out infinite; }
+    .gift h2 { font-size: 1.55rem; font-weight: 500; margin: 0 0 10px; }
+    .gift p { font-size: .98rem; line-height: 1.55; margin: 0; color: #68404c; }
+    .open-button { margin-top: 22px; padding: 10px 18px; border: 1px solid var(--wine); border-radius: 2px; color: var(--wine); background: transparent; cursor: pointer; font: 12px Arial, sans-serif; letter-spacing: .12em; text-transform: uppercase; transition: background .3s ease, color .3s ease, letter-spacing .3s ease; }
+    .open-button:hover, .open-button:focus-visible { background: var(--wine); color: white; letter-spacing: .16em; }
+    .panel { display: none; max-width: 850px; min-height: 310px; margin: 24px auto 0; padding: 30px; background: linear-gradient(145deg, #fffaf4, #f3dce1); color: var(--ink); border: 1px solid var(--gold); text-align: center; box-shadow: 0 24px 80px rgba(0,0,0,.22); position: relative; }
+    .panel.active { display: block; animation: gift-reveal .75s cubic-bezier(.2,.75,.25,1) both; }
+    .panel::before { content: '✧  ❦  ✧'; display: block; color: var(--rose); letter-spacing: .45em; font-size: 1rem; margin-bottom: 20px; animation: shimmer 3s ease-in-out infinite; }
+    .panel .close-button { transition: transform .25s ease, background .25s ease, box-shadow .25s ease; }
+    .panel .close-button:hover { transform: translateY(-2px); background: var(--rose); box-shadow: 0 6px 18px rgba(91,16,39,.2); }
+    @keyframes appear { from { opacity: 0; transform: translateY(16px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    @keyframes gift-reveal { 0% { opacity: 0; transform: translateY(24px) scale(.96); filter: blur(5px); } 65% { opacity: 1; filter: blur(0); } 100% { transform: translateY(0) scale(1); } }
+    @keyframes drift-up { 0% { opacity: 0; transform: translateY(0) rotate(0) scale(.65); } 12% { opacity: .8; } 80% { opacity: .65; } 100% { opacity: 0; transform: translateY(-110vh) rotate(240deg) scale(1.15); } }
+    @keyframes fade-up { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes float { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-9px) rotate(3deg); } }
+    @keyframes shimmer { 0%,100% { opacity: .7; } 50% { opacity: 1; text-shadow: 0 0 16px rgba(216,183,120,.45); } }
+    .panel h2 { font-size: 2rem; font-weight: 500; margin: 0 0 14px; }
+    .verse { font-size: 1.35rem; line-height: 1.7; font-style: italic; }
+    .reference { font: 12px Arial, sans-serif; text-transform: uppercase; letter-spacing: .16em; color: var(--rose); margin-top: 14px; }
+    .video-frame { width: 100%; max-width: 680px; margin: 18px auto 0; background: #21070f; border: 1px solid var(--gold); }
+    video { display: block; width: 100%; max-height: 420px; background: #21070f; }
+    .file-picker { margin-top: 16px; font: 14px Arial, sans-serif; max-width: 100%; }
+    .quote { font-size: clamp(1.3rem, 3vw, 2rem); line-height: 1.55; font-style: italic; max-width: 650px; margin: 20px auto; }
+    .close-button { margin-top: 18px; border: 0; background: var(--wine); color: white; padding: 10px 18px; cursor: pointer; }
+    footer { text-align: center; margin: 34px auto 0; color: #e9cbd3; font-size: .9rem; }
+    footer span { color: var(--gold); }
+
+    .lock-screen { position: fixed; inset: 0; z-index: 20; overflow-y: auto; padding: 28px 18px 40px; background: radial-gradient(ellipse at top, #7b1d3b 0%, #4a1023 52%, #260710 100%); color: var(--cream); text-align: center; }
+    .lock-inner { max-width: 760px; margin: 0 auto; }
+    .lock-eyebrow { color: var(--gold); text-transform: uppercase; letter-spacing: .25em; font: 11px Arial, sans-serif; }
+    .lock-screen h1 { font-size: clamp(2rem, 6vw, 3.5rem); margin: 14px 0 8px; }
+    .countdown { display: flex; justify-content: center; gap: 12px; margin: 22px auto 26px; flex-wrap: wrap; }
+    .time-unit { min-width: 78px; padding: 12px 10px; border: 1px solid rgba(216,183,120,.65); background: rgba(255,248,240,.07); }
+    .time-unit strong { display: block; color: #f2cbd5; font-size: clamp(1.5rem, 5vw, 2.2rem); font-weight: 400; }
+    .time-unit span { font: 10px Arial, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: #e9cbd3; }
+    .teaser { margin: 24px auto 0; padding: 28px clamp(16px, 4vw, 36px); background: linear-gradient(145deg, #fffaf4, #f3dce1); color: var(--ink); border: 1px solid var(--gold); box-shadow: 0 20px 60px rgba(0,0,0,.2); }
+    .teaser h2 { font-weight: 500; font-size: clamp(1.5rem, 4vw, 2rem); margin: 0 0 22px; }
+    .poem { white-space: pre-line; line-height: 1.85; font-size: 1rem; }
+    .lock-note { color: #f0dce1; line-height: 1.7; }
+    body.is-locked { overflow: hidden; }
+
+    @media (max-width: 760px) { .gift-grid { grid-template-columns: 1fr; max-width: 430px; } .gift { min-height: 225px; } .page { padding-top: 26px; } .panel { padding: 24px 16px; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; } }
+  </style>
+</head>
+<body class="is-locked">
+  <section class="lock-screen" id="lock-screen" aria-label="Website opening countdown">
+    <div class="lock-inner">
+      <div class="lock-eyebrow">A little something is waiting</div>
+      <h1>Until the Moment Arrives</h1>
+      <p class="lock-note">The full surprise will open on Monday, October 19, at 7:00 AM (Philippine time).</p>
+      <div class="countdown" aria-live="polite" aria-label="Time until the website opens">
+        <div class="time-unit"><strong id="days">00</strong><span>Days</span></div>
+        <div class="time-unit"><strong id="hours">00</strong><span>Hours</span></div>
+        <div class="time-unit"><strong id="minutes">00</strong><span>Minutes</span></div>
+        <div class="time-unit"><strong id="seconds">00</strong><span>Seconds</span></div>
+      </div>
+      <div class="ornament" aria-hidden="true">✦ ❧ ✦</div>
+      <article class="teaser">
+        <h2>“In Ways They Never Say”</h2>
+        <div class="poem">A face so composed, a voice steady and low,
+A heart full of thoughts that they never quite show.
+Their words are precise, their expressions restrained,
+A thousand unsaid things quietly contained.
+
+They never announce when they notice your pain,
+Nor promise that sunshine will follow the rain.
+They simply make room when you're falling behind,
+And give you the time that you need to unwind.
+
+They notice the questions you struggle to ask,
+The effort you hide underneath every task.
+They correct your mistakes, though their tone may seem cold,
+For they see the potential you have yet to hold.
+
+No flowery speeches, no praise just for show,
+Just chances to learn and more room to grow.
+They offer a hand without making it known,
+And help you stand firm when you feel all alone.
+
+Perhaps that's their language, so quiet, so plain,
+A lesson repeated until it remains.
+A deadline extended, a doubt put to rest,
+A push to remind you that you can do your best.
+
+They may never tell you the difference they've made,
+Or how much their patience has quietly stayed.
+They'll teach, they'll correct, then move on with their day,
+Unaware of the lives they've changed along the way.
+
+For care isn't always a comforting phrase,
+Nor love something shown in a thousand displays.
+Sometimes it's a person who silently stays,
+Who says nothing of care, yet shows it in a thousand small ways.</div>
+      </article>
+      <p class="lock-note">A poem for now. The rest, tomorrow. ♡</p>
+    </div>
+  </section>
+  <div class="sparkles" id="sparkles" aria-hidden="true"></div>
+  <main class="page">
+    <header class="hero">
+      <div class="eyebrow">With gratitude & admiration</div>
+      <h1>Happy <em>Teacher's Day</em></h1>
+      <p class="subtitle">A little collection of thoughtful things, made especially for you. Thank you for the patience, guidance, and kindness you share.</p>
+      <div class="ornament" aria-hidden="true">✦ ❧ ✦</div>
+    </header>
+
+    <section class="gift-grid" aria-label="Three little gifts">
+      <article class="gift">
+        <div class="symbol" aria-hidden="true">💐</div>
+        <h2>Flowers for You</h2>
+        <p>A bouquet of appreciation, with a verse to brighten your day.</p>
+        <button class="open-button" data-panel="flowers" aria-expanded="false">Open your flowers</button>
+      </article>
+      <article class="gift">
+        <div class="symbol" aria-hidden="true">▶</div>
+        <h2>A Little Video</h2>
+        <p>A small message, saved here for you to watch.</p>
+        <button class="open-button" data-panel="video-panel" aria-expanded="false">Play the surprise</button>
+      </article>
+      <article class="gift">
+        <div class="symbol" aria-hidden="true">📖</div>
+        <h2>A Bookish Note</h2>
+        <p>A gentle, bookish thought with a little Regency charm.</p>
+        <button class="open-button" data-panel="quote-panel" aria-expanded="false">Turn the page</button>
+      </article>
+    </section>
+
+    <button class="close-button home-button" id="home-button" hidden>← Back to all gifts</button>
+
+    <section class="panel" id="flowers" aria-live="polite">
+      <h2>Flowers, with thanks ♡</h2>
+      <div class="verse">“I can do all things through Christ which strengtheneth me.”</div>
+      <div class="reference">Philippians 4:13 · KJV</div>
+      <p>May you be reminded of the good you do and the strength you give to others.</p>
+      <button class="close-button">Close this gift</button>
+    </section>
+
+    <section class="panel" id="video-panel" aria-live="polite">
+      <h2>A message just for you</h2>
+      <p><strong>Snow White and the Thirty-Seven Dwarfs</strong></p>
+      <div class="video-frame"><video id="gift-video" controls playsinline preload="metadata"><source id="video-source" src="" type="video/mp4">Your browser does not support HTML video.</video></div>
+      <input class="file-picker" id="video-file" type="file" accept="video/*" aria-label="Choose a video from your device">
+      <p id="video-status" style="font: 13px Arial, sans-serif; color: #79515d;">No video selected yet.</p>
+      <button class="close-button">Close this gift</button>
+    </section>
+
+    <section class="panel" id="quote-panel" aria-live="polite">
+      <h2>A little note of admiration ♡</h2>
+      <div class="quote">“To be fond of dancing was a certain step towards falling in love.”</div>
+      <div class="reference">Jane Austen · Pride and Prejudice</div>
+      <p>A little literary charm to celebrate a teacher who makes learning a joy and leaves a lovely impression.</p>
+      <button class="close-button">Close this gift</button>
+    </section>
+
+    <footer>Made with <span>♥</span> and a little burgundy magic.</footer>
+  </main>
+  <script>
+    // Opens at 7:00 AM Philippine time on Monday, October 19, 2026.
+    const unlockAt = new Date('2026-10-19T07:00:00+08:00').getTime();
+    const lockScreen = document.getElementById('lock-screen');
+    function updateCountdown() {
+      const remaining = unlockAt - Date.now();
+      if (remaining <= 0) {
+        lockScreen.hidden = true;
+        document.body.classList.remove('is-locked');
+        clearInterval(countdownInterval);
+        return;
+      }
+      document.getElementById('days').textContent = String(Math.floor(remaining / 86400000)).padStart(2, '0');
+      document.getElementById('hours').textContent = String(Math.floor((remaining % 86400000) / 3600000)).padStart(2, '0');
+      document.getElementById('minutes').textContent = String(Math.floor((remaining % 3600000) / 60000)).padStart(2, '0');
+      document.getElementById('seconds').textContent = String(Math.floor((remaining % 60000) / 1000)).padStart(2, '0');
+    }
+    updateCountdown();
+    const countdownInterval = setInterval(updateCountdown, 1000);
+    const openButtons = document.querySelectorAll('[data-panel]');
+    const panels = document.querySelectorAll('.panel');
+    const giftGrid = document.querySelector('.gift-grid');
+    const homeButton = document.getElementById('home-button');
+    const sparkles = document.getElementById('sparkles');
+    let sparkleTimer;
+    function releaseSparkles() {
+      for (let i = 0; i < 18; i++) {
+        const particle = document.createElement('span');
+        particle.className = 'sparkle';
+        particle.textContent = ['✧', '✦', '·', '♡'][Math.floor(Math.random() * 4)];
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.setProperty('--duration', (5 + Math.random() * 5) + 's');
+        particle.style.fontSize = (10 + Math.random() * 18) + 'px';
+        particle.style.animationDelay = (Math.random() * 2) + 's';
+        sparkles.appendChild(particle);
+        particle.addEventListener('animationend', () => particle.remove(), { once: true });
+      }
+    }
+    openButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const target = document.getElementById(button.dataset.panel);
+        panels.forEach((panel) => panel.classList.remove('active'));
+        openButtons.forEach((item) => item.setAttribute('aria-expanded', 'false'));
+        giftGrid.hidden = true;
+        homeButton.hidden = false;
+        target.classList.add('active');
+        button.setAttribute('aria-expanded', 'true');
+        window.clearInterval(sparkleTimer);
+        releaseSparkles();
+        sparkleTimer = window.setInterval(releaseSparkles, 3500);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+    document.querySelectorAll('.close-button').forEach((button) => {
+      button.addEventListener('click', () => {
+        if (button.id === 'home-button') return;
+        const panel = button.closest('.panel');
+        panel.classList.remove('active');
+        const opener = document.querySelector(`[data-panel="${panel.id}"]`);
+        if (opener) opener.setAttribute('aria-expanded', 'false');
+      });
+    });
+    homeButton.addEventListener('click', () => {
+      panels.forEach((panel) => panel.classList.remove('active'));
+      openButtons.forEach((item) => item.setAttribute('aria-expanded', 'false'));
+      giftGrid.hidden = false;
+      homeButton.hidden = true;
+      window.clearInterval(sparkleTimer);
+      sparkles.replaceChildren();
+      giftGrid.classList.add('leaving');
+      requestAnimationFrame(() => requestAnimationFrame(() => giftGrid.classList.remove('leaving')));
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    const fileInput = document.getElementById('video-file');
+    const video = document.getElementById('gift-video');
+    const status = document.getElementById('video-status');
+    let currentVideoUrl = null;
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files && fileInput.files[0];
+      if (!file) return;
+      if (currentVideoUrl) URL.revokeObjectURL(currentVideoUrl);
+      currentVideoUrl = URL.createObjectURL(file);
+      video.src = currentVideoUrl;
+      video.load();
+      status.textContent = 'Ready to play: ' + file.name;
+    });
+    document.querySelectorAll('.panel .close-button').forEach((button) => {
+      button.addEventListener('click', () => {
+        const panel = button.closest('.panel');
+        if (!panel.classList.contains('active')) return;
+        window.clearInterval(sparkleTimer);
+        sparkles.replaceChildren();
+        giftGrid.hidden = false;
+        homeButton.hidden = true;
+        giftGrid.classList.add('leaving');
+        requestAnimationFrame(() => requestAnimationFrame(() => giftGrid.classList.remove('leaving')));
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  </script>
+</body>
+</html>
